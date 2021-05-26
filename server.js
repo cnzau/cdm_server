@@ -62,6 +62,31 @@ app.get('/patients/:id/reports', (request, response) => {
     .catch((err) => console.log(err));
 });
 
+// get CDM monthly reports for all categories
+app.get('/reports', (request, response) => {
+  const db = dbService.getDbServiceInstance();
+
+  const result = db.getReports();
+
+  result
+    .then((data) => response.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// get patient list for specific category ? location & month
+app.get('/reports/:category', (request, response) => {
+  const db = dbService.getDbServiceInstance();
+
+  const result = db.getCategorysPatientList({
+    ...request.params,
+    ...request.query,
+  });
+
+  result
+    .then((data) => response.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));

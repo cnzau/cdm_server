@@ -46,7 +46,9 @@ app.get('/patients/:id', (request, response) => {
   const result = db.getPatient(id);
 
   result
-    .then((data) => response.json({ data: data }))
+    .then((data) => {
+      response.json(data[0]);
+    })
     .catch((err) => console.log(err));
 });
 

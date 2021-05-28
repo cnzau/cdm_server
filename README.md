@@ -13,17 +13,52 @@ Routes include:
 - /reports
 - /reports/category?l_id=''&month=''
 
-Categories passed as parameters can only be 'ndp', 'kdp', 'nhp' or 'khp' or 'hdp'.
+### Note:
 
-`ndp` - New Diabetic Patient
-`kdp` - Known Diabetic Patient
-`nhp` - New Hypertensive Patient
-`khp` - Known Hypertensive Patient
-`hdp` - Hypertensive and Diabetic Patients
+To search for patients ensure to have `search_name` as the query parameter variable.
 
-Location Id is passed as querry parameter
+i.e
 
-Month passed as querry parameter should be in YYYY-mm formart.
+```
+/patients?search_name= 100
+/patients?search_name=ient 10
+/patients?search_name=patient 1
+```
+
+otherwise your response will get all patients details.
+
+- White spaces will be applied in the search.
+
+To get a particular patients reports pass the patient's :id
+
+Example for a patient with id of 3
+
+```
+/patients/3/reports
+```
+
+To generate a CDM Monthly Report for all locations grouped by month and for all categories use
+
+```
+/reports
+```
+
+To get the patient list for a particular category in a specified month :
+
+1. Categories passed can only be 'ndp', 'kdp', 'nhp' or 'khp' or 'hdp'.
+
+- `ndp` - New Diabetic Patient
+- `kdp` - Known Diabetic Patient
+- `nhp` - New Hypertensive Patient
+- `khp` - Known Hypertensive Patient
+- `hdp` - Hypertensive and Diabetic Patients
+
+2. Location id is passed as querry parameter using the name key `l_id`
+3. Month passed as querry parameter using the name key `month` and should be in `YYYY-mm` formart.
+
+```
+/reports/hdp?l_id=84&month=2021-05
+```
 
 For the Environment variables, have a .env file then replace the '' with your values
 
@@ -32,6 +67,6 @@ PORT=''
 HOST=''
 DB_PORT=''
 DATABASE=''
-USER=''test_user''
+USER=''
 PASSWORD=''
 ```

@@ -31,14 +31,14 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT 
-              patient.patient_id AS ID,
-              patient.name AS Name,
-              SUBSTRING(patient.gender, 1, 1) AS Gender,
-              DATE_FORMAT(patient.dob, '%Y-%m-%d') AS DOB,
+              patient.patient_id AS id,
+              patient.name AS name,
+              SUBSTRING(patient.gender, 1, 1) AS gender,
+              DATE_FORMAT(patient.dob, '%Y-%m-%d') AS dob,
               DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), patient.dob)),
-                      '%Y') + 0 AS Age,
-              patient.phone_number AS Contact,
-              DATE_FORMAT(patient.date_created, '%Y-%m-%d') AS 'Date Created'
+                      '%Y') + 0 AS age,
+              patient.phone_number AS contact,
+              DATE_FORMAT(patient.date_created, '%Y-%m-%d') AS date_created
           FROM
               patient ${condition(search_name)};`;
         connection.query(query, (err, results) => {
@@ -83,13 +83,13 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT 
-              patient.patient_id AS ID,
-              patient.name as Name,
-              patient.gender as Gender,
-              DATE_FORMAT(dob,'%Y-%m-%d') AS DOB,
+              patient.patient_id AS id,
+              patient.name as name,
+              patient.gender as gender,
+              DATE_FORMAT(dob,'%Y-%m-%d') AS dob,
               DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), patient.dob)),
-                      '%Y') + 0 AS Age,
-              phone_number AS Contact
+                      '%Y') + 0 AS age,
+              phone_number AS contact
           FROM
               patient
           WHERE
@@ -113,18 +113,18 @@ class DbService {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT 
               DATE_FORMAT(flat_cdm_summary.encounter_datetime,
-                      '%Y-%m-%d') AS 'Encounter Date',
-              location.name AS Location,
+                      '%Y-%m-%d') AS encounter_date,
+              location.name AS location,
               (CASE
                   WHEN flat_cdm_summary.htn_status = 7285 THEN 'New'
                   WHEN flat_cdm_summary.htn_status = 7286 THEN 'Known'
                   ELSE NULL
-              END) AS 'Hypertension Status',
+              END) AS hypertension_status,
               (CASE
                   WHEN flat_cdm_summary.dm_status = 7281 THEN 'New'
                   WHEN flat_cdm_summary.dm_status = 7282 THEN 'Known'
                   ELSE NULL
-              END) AS 'Diabetic Status'
+              END) AS diabetic_status
           FROM
               patient
                   INNER JOIN
@@ -151,28 +151,28 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT 
-              location.id AS LID,
-              DATE_FORMAT(encounter_datetime, '%Y-%m') AS Month,
-              location.name AS Location,
+              location.id AS id,
+              DATE_FORMAT(encounter_datetime, '%Y-%m') AS month,
+              location.name AS location,
               COUNT(CASE
                   WHEN htn_status = 7285 THEN 1
-              END) AS 'New Hypertensive',
+              END) AS new_hypertensive,
               COUNT(CASE
                   WHEN htn_status = 7286 THEN 1
-              END) AS 'Known Hypertensive',
+              END) AS known_hypertensive,
               COUNT(CASE
                   WHEN dm_status = 7281 THEN 1
-              END) AS 'New Diabetic',
+              END) AS new_diabetic,
               COUNT(CASE
                   WHEN dm_status = 7282 THEN 1
-              END) AS 'Known Diabetic',
+              END) AS known_diabetic,
               COUNT(CASE
                   WHEN
                       (dm_status = 7281 OR dm_status = 7282)
                           AND (htn_status = 7285 OR htn_status = 7286)
                   THEN
                       1
-              END) AS 'Hypertensive and Diabetic'
+              END) AS hypertensive_and_diabetic
           FROM
               testDB.location
                   INNER JOIN
@@ -219,22 +219,22 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT 
-        patient.patient_id as PID, 
-        patient.name AS Name, 
-        DATE_FORMAT(flat_cdm_summary.encounter_datetime,'%Y-%m-%d') as 'Encounter Date', 
-        location.name as Location, 
-        SUBSTRING(patient.gender, 1, 1) as Gender,
+        patient.patient_id as id, 
+        patient.name AS name, 
+        DATE_FORMAT(flat_cdm_summary.encounter_datetime,'%Y-%m-%d') as encounter_date, 
+        location.name as location, 
+        SUBSTRING(patient.gender, 1, 1) as gender,
         (CASE
             WHEN flat_cdm_summary.htn_status = 7285 THEN "New"
             WHEN flat_cdm_summary.htn_status = 7286 THEN "Known"
             ELSE null
-        END) as 'Hypertension Status',
+        END) as hypertension_status,
         (CASE
             WHEN flat_cdm_summary.dm_status = 7281 THEN "New"
             WHEN flat_cdm_summary.dm_status = 7282 THEN "Known"
             ELSE null
-        END) as 'Diabetic Status',
-        DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),patient.dob)), '%Y')+0 as Age
+        END) as diabetic_status,
+        DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),patient.dob)), '%Y')+0 as age
         FROM patient 
         inner join flat_cdm_summary on patient.patient_id=flat_cdm_summary.patient_id 
         inner join location on location.id=flat_cdm_summary.location_id

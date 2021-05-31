@@ -124,7 +124,7 @@ class DbService {
                   WHEN flat_cdm_summary.dm_status = 7281 THEN 'New'
                   WHEN flat_cdm_summary.dm_status = 7282 THEN 'Known'
                   ELSE NULL
-              END) AS diabetic_status
+              END) AS diabetes_status
           FROM
               patient
                   INNER JOIN
@@ -192,7 +192,7 @@ class DbService {
 
   // get a category's patient list
   async getCategorysPatientList(...args) {
-    const { category, month, l_id } = args[0];
+    const { category, l_id, month } = args[0];
 
     const condition = (ct) => {
       switch (ct) {
@@ -203,10 +203,10 @@ class DbService {
           return 'AND dm_status = 7282';
           break;
         case 'nhp':
-          return 'AND dm_status = 7285';
+          return 'AND htn_status = 7285';
           break;
         case 'khp':
-          return 'AND dm_status = 7286';
+          return 'AND htn_status = 7286';
           break;
         case 'hdp':
           return 'AND (dm_status = 7281 OR dm_status = 7282) AND (htn_status = 7285 OR htn_status = 7286)';
@@ -233,7 +233,7 @@ class DbService {
             WHEN flat_cdm_summary.dm_status = 7281 THEN "New"
             WHEN flat_cdm_summary.dm_status = 7282 THEN "Known"
             ELSE null
-        END) as diabetic_status,
+        END) as diabetes_status,
         DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),patient.dob)), '%Y')+0 as age
         FROM patient 
         inner join flat_cdm_summary on patient.patient_id=flat_cdm_summary.patient_id 

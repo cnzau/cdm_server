@@ -76,11 +76,10 @@ app.get('/reports', (request, response) => {
 });
 
 // get patient list for specific category ? location & month
-app.get('/reports/:category', (request, response) => {
+app.get('/reports/patients', (request, response) => {
   const db = dbService.getDbServiceInstance();
 
   const result = db.getCategorysPatientList({
-    ...request.params,
     ...request.query,
   });
 

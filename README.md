@@ -7,11 +7,11 @@ Deployed on https://cdm-api.clementnzau.com/
 Routes include:
 
 - /patients
-- /patients?search_name=''
+- /patients?search_name={name}
 - /patients/:id
 - /patients/:id/reports
 - /reports
-- /reports/category?l_id=''&month=''
+- /reports/patients?category={category}&l_id={id}&month={month}
 
 ### Note:
 
@@ -43,9 +43,9 @@ To generate a CDM Monthly Report for all locations grouped by month and for all 
 /reports
 ```
 
-To get the patient list for a particular category in a specified month :
+To get the patients list for a particular category in a specified month :
 
-1. Categories passed can only be 'ndp', 'kdp', 'nhp' or 'khp' or 'hdp'.
+1. Categories passed can only be 'ndp', 'kdp', 'nhp' or 'khp' or 'hdp' and using the name key `category`.
 
 - `ndp` - New Diabetic Patient
 - `kdp` - Known Diabetic Patient
@@ -57,7 +57,7 @@ To get the patient list for a particular category in a specified month :
 3. Month passed as querry parameter using the name key `month` and should be in `YYYY-mm` formart.
 
 ```
-/reports/hdp?l_id=84&month=2021-05
+/reports/patients?category=hdp&l_id=84&month=2021-05
 ```
 
 For the Environment variables, have a .env file then replace the '' with your values
